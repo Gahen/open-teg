@@ -11,7 +11,8 @@ angular.module('tegApp')
 				element.find('g').find('g')
 					.on('click', function(el){
 						box.text(el.currentTarget.id);
-					});
+					}
+				);
 			}
 		};
 	});

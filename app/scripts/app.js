@@ -4,7 +4,8 @@ angular.module('tegApp', [
 	'ngCookies',
 	'ngResource',
 	'ngSanitize',
-	'ngRoute'
+	'ngRoute',
+	'assert'
 ])
 	.config(function ($routeProvider) {
 		$routeProvider

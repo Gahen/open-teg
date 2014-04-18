@@ -6,11 +6,12 @@ describe('Player', function () {
 	beforeEach(module('tegApp'));
 
 	// instantiate objects
-	var player, country, card, card2, card3;
+	var player, country, card, card2, card3, card4;
 	beforeEach(inject(function (_Player_, _Country_, _Card_) {
-		card = _Card_.make({id: 'gran_bretana'}); // This should be more mockable.
-		card2 = _Card_.make({id: 'arabia'}); // This should be more mockable.
+		card = _Card_.make({id: 'uruguay'}); // This should be more mockable.
+		card2 = _Card_.make({id: 'argentina'}); // This should be more mockable.
 		card3 = _Card_.make({id: 'italia'}); // This should be more mockable.
+		card4 = _Card_.make({id: 'gran_bretana'}); // This should be more mockable.
 		country = _Country_.make({id: 'someCountry'});
 		player = _Player_.make('fafrula');
 		spyOn(country, 'setArmies');
@@ -51,10 +52,19 @@ describe('Player', function () {
 		expect(player.getCards()).toEqual([card]);
 	});
 
-	it('should not use cards if they are unusable', function () {
+	it('should not use cards if they are too few', function () {
 		player.addCard(card);
 		player.useCards([card]);
 		expect(player.getCards()).toEqual([card]);
+	});
+
+	it('should not use cards if they don\'t have 3 different ones', function () {
+		var cards = [ card, card2, card4 ];
+		player.addCard(card);
+		player.addCard(card2);
+		player.addCard(card4);
+		player.useCards(cards);
+		expect(player.getCards()).toEqual(cards);
 	});
 
 	it('should use cards', function () {

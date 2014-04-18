@@ -8,12 +8,15 @@ angular.module('tegApp')
 			if (c.__class !== 'Country') {
 				c = Country.make(c);
 			}
+			if (!_.find(types, {countryId: c.id})) { return null; }
+			var type = _.find(types, {countryId: c.id}).value;
+
 			var that = {
 				country: c,
+				type: type, // optimization for searchs
 				getCountry: _.constant(c),
-				getType: _.constant(_.find(types, {countryId: c.id}))
+				getType: _.constant(type)
 			};
-			that.type = that.getType();
 
 			return that;
 		}
@@ -21,4 +24,5 @@ angular.module('tegApp')
 		return {
 			make: make
 		};
-	});
+	}
+);

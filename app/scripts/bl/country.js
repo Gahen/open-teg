@@ -6,12 +6,34 @@ angular.module('tegApp')
 		// Service logic
 		// ...
 
-		var meaningOfLife = 42;
+		function make(country) {
+			var that = {
+				__class: 'Country',
+				addArmies: function(armies) {
+					that.armies += armies;
+				},
+				removeArmy: function() {
+					that.armies--;
+				},
+				setArmies: function(armies) {
+					that.armies = armies;
+				},
+				getId: _.constant(country.id)
+			};
+
+			angular.extend(that, country);
+
+			return that;
+		}
+		function get() {
+			return _.map(mock, function(m) {
+				return make(m);
+			});
+		}
 
 		// Public API here
 		return {
-			someMethod: function () {
-				return meaningOfLife;
-			}
+			make: make,
+			get: get
 		};
 	});

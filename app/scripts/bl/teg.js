@@ -27,7 +27,7 @@ angular.module('tegApp')
 					that.currentPlayer = that.players[that.players.indexOf(that.currentPlayer)+1];
 					that.currentPlayer.startTurn();
 				},
-				addArmy(country, armies) {
+				addArmy: function(country, armies) {
 					that.currentPlayer.addArmy(country, armies);
 				}
 			};

@@ -2,6 +2,12 @@
 
 angular.module('tegApp')
 	.factory('Player', function () {
+		var countries = [], cards = [], armies = 0;
+
+		function getCountry(country) {
+			return _.find(countries, { id : country.id });
+		}
+
 		function differentCards(cards) {
 			return _.uniq(cards, 'type').length === cards.length;
 		}
@@ -10,35 +16,50 @@ angular.module('tegApp')
 			var that = {
 				name: name,
 				playing: false,
-				cards: [],
-				countries: [],
 				startTurn: function() {
 					that.playing = true;
 				},
 				endTurn: function() {
 					that.playing = false;
 				},
+				getCountries: function() {
+					return angular.copy(countries); // protect it from editing.
+				},
 				addCountry: function(country) {
-					that.countries.push(country);
+					armies++;
+					country.setArmies(1);
+					countries.push(country);
 				},
 				removeCountry: function(country) {
-					_.remove(that.countries, country);
+					countries = _.without(countries, country);
 				},
-				addArmies: function(country, armies) {
-					country.army+= armies;
+				addArmies: function(country, extraArmies) {
+					var myCountry = getCountry(country);
+					armies += extraArmies;
+					myCountry.addArmies(extraArmies);
 				},
 				removeArmy: function(country) {
-					country.army--;
+					var myCountry = getCountry(country);
+					myCountry.removeArmy();
+					armies--;
+				},
+				getArmies: function() {
+					return armies;
 				},
 				addCard: function(card) {
-					that.cards.push(card);
+					cards.push(card);
 				},
-				useCards: function(cards) {
-					if (differentCards(cards)) {
-
+				getCards: function() {
+					return cards;
+				},
+				useCards: function(cardsToBeUsed) {
+					if (differentCards(cardsToBeUsed) && _.difference(cards, cardsToBeUsed).length === cards.length - 3) {
+						cards = _.difference(cards, cardsToBeUsed);
 					}
 				}
 			};
+
+			return that;
 		}
 
 		// Public API here

@@ -11,8 +11,7 @@ describe('Service: TEG', function () {
     TEG = _TEG_;
   }));
 
-  it('should do something', function () {
-    expect(!!TEG).toBe(true);
+  it('', function () {
   });
 
 });

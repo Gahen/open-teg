@@ -2,7 +2,7 @@
 
 angular.module('tegApp')
 	.factory('Player', function () {
-		var countries = [], cards = [], armies = 0;
+		var countries = [], cards = [], armies = 0, objective;
 
 		function getCountry(country) {
 			return _.find(countries, { id : country.id });
@@ -12,9 +12,10 @@ angular.module('tegApp')
 			return _.uniq(cards, 'type').length === cards.length;
 		}
 
-		function make(name) {
+		function make(name, color) {
 			var that = {
 				name: name,
+				color: color,
 				playing: false,
 				startTurn: function() {
 					that.playing = true;
@@ -56,6 +57,12 @@ angular.module('tegApp')
 					if (differentCards(cardsToBeUsed) && _.difference(cards, cardsToBeUsed).length === cards.length - 3) {
 						cards = _.difference(cards, cardsToBeUsed);
 					}
+				},
+				setObjective: function(o) {
+					objective = o;
+				},
+				getObjective: function() {
+					return objective;
 				}
 			};
 

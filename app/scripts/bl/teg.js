@@ -6,7 +6,7 @@
  */
 
 angular.module('tegApp')
-	.factory('TEG', function (Dice) {
+	.factory('TEG', function (Dice, Player, Country, $interval) {
 		var DESTROY = 'destroy';
 		var colors = {
 			green: 'green',
@@ -15,6 +15,18 @@ angular.module('tegApp')
 			yellow: 'yellow',
 			pink: 'pink',
 			black: 'black'
+		};
+
+		var states = {
+			// Base states
+			attack: 'A',
+			addArmies: 'AM',
+			// Starting states
+			firstArmies: 'FA',
+			secondArmies: 'SA',
+			// attacking sub states
+			regroup: 'R',
+			afterCard: 'AC'
 		};
 
 		var objectives = [
@@ -93,16 +105,87 @@ angular.module('tegApp')
 			},
 		];
 
-		function make(players) {
+		var z;
+
+		var f = function() {
 			var that = {
-				players: players,
+				players: [],
+				state: states.firstArmies,
 				currentPlayer: null,
+				attacker: null, // last attacking player
+				defender: null, // last defending player
+				gameStarted: false,
+				dices: [], // last pair of dices
+
+				addPlayer: function(color, name) {
+					that.players.push(Player.make(name, color));
+				},
+
+				start: function() {
+					that.gameStarted = true;
+					that.setObjectives();
+					that.setCountries();
+					that.currentPlayer = that.players[0];
+					that.pendingPlayers = that.players.slice(0);
+					that.startTimer();
+				},
+
+				startTimer: function() {
+					z = (new Date()).getTime()+60*2*1000; // 2 minutes
+
+					var i = $interval(function() {
+						that.time = z - (new Date()).getTime();
+						if (that.time <= 0) {
+							that.changeTurn();
+							$interval.cancel(i);
+						}
+					}, 100);
+				},
+
+				setCountries: function() {
+					var cs = _.shuffle(Country.get());
+					var i = 0;
+					_.each(cs, function(c) {
+						i = i % that.players.length;
+						that.players[i++].addCountry(c);
+					});
+				},
+
+				setObjectives: function() {
+					var objs = _.shuffle(objectives.slice(0));
+					_.each(that.players, function(p) {
+						p.setObjective(objs.shift());
+					});
+				},
+
+				nextState: function() {
+					switch (that.state) {
+						case states.firstArmies:
+							that.state = states.secondArmies;
+							break;
+						case states.secondArmies:
+							that.state = states.attack;
+							break;
+						case states.attack:
+						case states.afterCard:
+						case states.regroup:
+							that.state = states.addArmies;
+							break;
+						case states.addArmies:
+							that.state = states.attack;
+							break;
+					}
+				},
 
 				attack: function(defender, attackingCountry, defendingCountry) {
+					that.attacker = that.currentPlayer;
+					that.defender = defender;
+
 					var totalDices = Math.max(attackingCountry.armies, defendingCountry.armies);
 					var dices = Dice.roll(totalDices); // sorted pair of array[1..3] of dices (from 1 to 6)
+					that.dices = dices;
 					for (var i=0; i < dices; i++) {
-						if (dices[0] > dices[1]) {
+						if (dices[0][i] > dices[1][i]) {
 							that.currentPlayer.removeArmy(attackingCountry);
 						} else {
 							defender.removeArmy(defendingCountry);
@@ -123,17 +206,22 @@ angular.module('tegApp')
 				},
 
 				changeTurn: function() {
-					that.currentPlayer.endTurn();
-					that.currentPlayer = that.players[that.players.indexOf(that.currentPlayer)+1];
-					that.currentPlayer.startTurn();
 					that.checkIfWon();
+					that.currentPlayer.endTurn();
+					if (that.pendingPlayers.length === 0) {
+						that.pendingPlayers = that.players.slice(1).push(that.players[that.players.length-1]);
+						that.nextState();
+					}
+					that.currentPlayer = that.pendingPlayers.shift();
+					that.currentPlayer.startTurn();
+					that.startTime();
 				},
 
 				addArmies: function(country, armies) {
 					that.currentPlayer.addArmy(country, armies);
 				},
 
-				checkIfWon(defender) {
+				checkIfWon: function(defender) {
 					var objective = that.currentPlayer.getObjective();
 					// Objetivo común
 					if (that.currentPlayer.getCountries().length >= 30) {
@@ -166,10 +254,13 @@ angular.module('tegApp')
 			};
 
 			return that;
-		}
+		};
 
 		// Public API here
 		return {
-			make: make
+			'new': f,
+			states: states,
+			objectives: objectives,
+			colors: colors
 		};
 	});

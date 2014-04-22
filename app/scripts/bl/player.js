@@ -17,6 +17,7 @@ angular.module('tegApp')
 				name: name,
 				color: color,
 				playing: false,
+				cardUses: 0,
 				startTurn: function() {
 					that.playing = true;
 				},
@@ -56,6 +57,7 @@ angular.module('tegApp')
 				useCards: function(cardsToBeUsed) {
 					if (differentCards(cardsToBeUsed) && _.difference(cards, cardsToBeUsed).length === cards.length - 3) {
 						cards = _.difference(cards, cardsToBeUsed);
+						cardUses++;
 					}
 				},
 				setObjective: function(o) {

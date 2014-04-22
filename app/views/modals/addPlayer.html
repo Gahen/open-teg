@@ -1,0 +1,11 @@
+<div class="modal-header">
+	<h3>Añadir jugador</h3>
+</div>
+<div class="modal-body">
+	<label>Nombre: <input type="text" name="name"/></label>
+	<label>Color: <select name="color" data-ng-options="color for color in colors"></select></label>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok()">OK</button>
+	<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

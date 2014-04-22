@@ -7,4 +7,34 @@
   <h3 class="text-muted">TEG</h3>
 </div>
 
+<header>
+	<div class="players" data-ng-repeat="player in players">
+		<h4 data-ng-class="{active: player.name === TEG.currentPlayer.name}" class="col-md-1 {{player.color}}">{{player.name}}</h4>
+	</div>
+	<button data-ng-click="addPlayer()" data-ng-hide="TEG.gameStarted">Agregar jugador</button>
+	<button data-ng-click="TEG.start()" data-ng-hide="TEG.gameStarted">¡Jugar!</button>
+	<div class="time" data-ng-show="TEG.gameStarted">
+		{{ TEG.time }}
+	</div>
+</header>
 <mapa></mapa>
+<div class="col-sm-3 col-sm-offset-1 blog-sidebar" data-ng-show="TEG.gameStarted">
+	<div class="info col-md-4">
+		<p>Países:</p><span>{{ TEG.currentPlayer.getCountries().length }}</span>
+		<p>Tropas:</p><span>{{ TEG.currentPlayer.getArmies() }}</span>
+		<p>Tropas a sumar:</p><span>{{ 0 }}</span>
+		<p>Tarjetas:</p><span>{{ TEG.currentPlayer.getCards().length }}</span>
+		<p>Canjes realizados:</p><span>{{ TEG.currentPlayer.cardUses }}</span>
+	</div>
+	<div class="dices col-md-4">
+		<h4>Attacking ({{ TEG.attacker.name }})</h4>
+		<ul data-ng-repeat="dice in TEG.dices[0]">
+			<li>{{ dice }}</li>
+		</ul>
+
+		<h4>Defending ({{ TEG.defender.name }})</h4>
+		<ul data-ng-repeat="dice in TEG.dices[1]">
+			<li>{{ dice }}</li>
+		</ul>
+	</div>
+</div>

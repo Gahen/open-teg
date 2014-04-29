@@ -110,6 +110,7 @@ angular.module('tegApp')
 		var f = function() {
 			var that = {
 				players: [],
+				colors: angular.copy(colors),
 				state: states.firstArmies,
 				currentPlayer: null,
 				attacker: null, // last attacking player
@@ -118,7 +119,13 @@ angular.module('tegApp')
 				dices: [], // last pair of dices
 
 				addPlayer: function(color, name) {
+					delete that.colors[color];
 					that.players.push(Player.make(name, color));
+				},
+
+				removePlayer: function(player) {
+					that.players = _.remove(that.players, player);
+					that.colors[player.getColor()] = player.getColor();
 				},
 
 				start: function() {

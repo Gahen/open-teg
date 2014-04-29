@@ -1,20 +1,18 @@
-<div class="header">
-  <ul class="nav nav-pills pull-right">
-    <li class="active"><a ng-href="#">Home</a></li>
-    <li><a ng-href="#">About</a></li>
-    <li><a ng-href="#">Contact</a></li>
-  </ul>
-  <h3 class="text-muted">TEG</h3>
-</div>
-
-<header>
-	<div class="players" data-ng-repeat="player in players">
-		<h4 data-ng-class="{active: player.name === TEG.currentPlayer.name}" class="col-md-1 {{player.color}}">{{player.name}}</h4>
+<header class="row header">
+	<h1 class="text-muted">TEG</h1>
+	<div class="players col-md-8">
+		<h3>Jugadores</h3>
+		<span data-ng-show="TEG.players.length === 0">Aún no hay jugadores</span>
+		<div data-ng-repeat="player in TEG.players" data-ng-class="player.getColor()">
+			<span data-ng-class="{active: player.name === TEG.currentPlayer.name}" class="{{player.color}} col-xs-2">{{player.name}}</span>
+		</div>
 	</div>
-	<button data-ng-click="addPlayer()" data-ng-hide="TEG.gameStarted">Agregar jugador</button>
-	<button data-ng-click="TEG.start()" data-ng-hide="TEG.gameStarted">¡Jugar!</button>
-	<div class="time" data-ng-show="TEG.gameStarted">
-		{{ TEG.time }}
+	<div class="buttons col-md-4">
+		<button class="btn btn-primary" data-ng-click="addPlayer()" data-ng-hide="TEG.gameStarted">Agregar jugador</button>
+		<button class="btn btn-primary" data-ng-click="TEG.start()" data-ng-hide="TEG.gameStarted">¡Jugar!</button>
+		<div class="time" data-ng-show="TEG.gameStarted">
+			<h5>Tiempo {{ TEG.time }}</h5>
+		</div>
 	</div>
 </header>
 <mapa></mapa>

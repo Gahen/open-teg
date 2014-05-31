@@ -1,3 +1,4 @@
+$grid-columns: 18;
 @import "../bower_components/twitter-bootstrap-sass/vendor/assets/stylesheets/bootstrap";
 
 .browsehappy {
@@ -120,4 +121,8 @@ body {
 }
 .black {
 	color: black;
+}
+
+.active {
+	@extend .bg-info
 }

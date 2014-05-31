@@ -117,6 +117,7 @@ angular.module('tegApp')
 				defender: null, // last defending player
 				gameStarted: false,
 				dices: [], // last pair of dices
+				pendingArmies: 0,
 
 				addPlayer: function(color, name) {
 					delete that.colors[color];
@@ -134,6 +135,7 @@ angular.module('tegApp')
 					that.setCountries();
 					that.currentPlayer = that.players[0];
 					that.pendingPlayers = that.players.slice(0);
+					that.pendingArmies = 3;
 					that.startTimer();
 				},
 
@@ -184,9 +186,41 @@ angular.module('tegApp')
 					}
 				},
 
-				attack: function(defender, attackingCountry, defendingCountry) {
+				countryAction: function(countryFrom, countryTo) {
+					var p = that.currentPlayer;
+					switch (that.state) {
+						case states.firstArmies:
+						case states.secondArmies:
+						case states.addArmies:
+							if (p.hasCountry(countryFrom) && that.pendingArmies > 0) {
+								that.addArmies(1, countryFrom);
+								that.pendingArmies--;
+							}
+							break;
+						case states.attack:
+						case states.regroup:
+							if (!countryTo) {
+								return _.partial(that.countryAction, countryFrom);
+							} else if (p.hasCountry(countryFrom) && !p.hasCountry(countryFrom) && countryFrom.limits(countryTo)) {
+								that.attack(countryFrom, countryTo);
+							}
+							break;
+						case states.afterCard:
+							if (p.hasCountry(countryFrom)) {
+								if (p.canUseCard(countryFrom)) {
+									that.addArmies(2, countryFrom);
+									that.useCard(countryFrom);
+								}
+							}
+							break;
+					}
+				},
+
+				attack: function(attackingCountry, defendingCountry) {
 					that.attacker = that.currentPlayer;
-					that.defender = defender;
+					var defender = that.defender = _.find(that.players, function(p) {
+						return p.hasCountry(defendingCountry);
+					});
 
 					var totalDices = Math.max(attackingCountry.armies, defendingCountry.armies);
 					var dices = Dice.roll(totalDices); // sorted pair of array[1..3] of dices (from 1 to 6)

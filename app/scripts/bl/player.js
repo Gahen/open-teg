@@ -2,17 +2,14 @@
 
 angular.module('tegApp')
 	.factory('Player', function () {
-		var countries = [], cards = [], armies = 0, objective;
-
-		function getCountry(country) {
-			return _.find(countries, { id : country.id });
-		}
-
-		function differentCards(cards) {
-			return _.uniq(cards, 'type').length === cards.length;
-		}
 
 		function make(name, color) {
+			var countries = [], cards = [], armies = 0, objective;
+
+			function differentCards(cards) {
+				return _.uniq(cards, 'type').length === cards.length;
+			}
+
 			var that = {
 				name: name,
 				color: color,
@@ -27,6 +24,9 @@ angular.module('tegApp')
 				getCountries: function() {
 					return angular.copy(countries); // protect it from editing.
 				},
+				hasCountry: function(country) {
+					return _.contains(countries, country);
+				},
 				addCountry: function(country) {
 					armies++;
 					country.setArmies(1);
@@ -36,12 +36,12 @@ angular.module('tegApp')
 					countries = _.without(countries, country);
 				},
 				addArmies: function(country, extraArmies) {
-					var myCountry = getCountry(country);
+					var myCountry = that.getCountry(country);
 					armies += extraArmies;
 					myCountry.addArmies(extraArmies);
 				},
 				removeArmy: function(country) {
-					var myCountry = getCountry(country);
+					var myCountry = that.getCountry(country);
 					myCountry.removeArmy();
 					armies--;
 				},
@@ -54,10 +54,24 @@ angular.module('tegApp')
 				getCards: function() {
 					return cards;
 				},
-				useCards: function(cardsToBeUsed) {
+				hasCard: function(card) {
+					return _.contains(cards, card);
+				},
+				canUseCard: function(countryOrCard) {
+					var card = that.hasCard(countryOrCard) ? countryOrCard : _.find(cards, { country: countryOrCard });
+					return card && !card.used;
+				},
+				useCard: function(countryOrCard) {
+					var card = that.hasCard(countryOrCard) ? countryOrCard : _.find(cards, { country: countryOrCard });
+					if (card && that.canUseCard(card)) {
+						card.used = true;
+					}
+				},
+
+				tradeCards: function(cardsToBeUsed) {
 					if (differentCards(cardsToBeUsed) && _.difference(cards, cardsToBeUsed).length === cards.length - 3) {
 						cards = _.difference(cards, cardsToBeUsed);
-						cardUses++;
+						that.cardUses++;
 					}
 				},
 				setObjective: function(o) {

@@ -35,14 +35,13 @@ angular.module('tegApp')
 				removeCountry: function(country) {
 					countries = _.without(countries, country);
 				},
+				/**
+				 * ¿Add/RemoveArmies acá o en el TEG?
+				 */
 				addArmies: function(country, extraArmies) {
-					var myCountry = that.getCountry(country);
 					armies += extraArmies;
-					myCountry.addArmies(extraArmies);
 				},
 				removeArmy: function(country) {
-					var myCountry = that.getCountry(country);
-					myCountry.removeArmy();
 					armies--;
 				},
 				getArmies: function() {

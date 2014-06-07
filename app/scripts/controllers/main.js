@@ -25,5 +25,6 @@ angular.module('tegApp')
 		$scope.colors = colors;
 		$scope.ok = function () {
 			$modalInstance.close($scope.data);
+			return false;
 		};
 	});

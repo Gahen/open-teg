@@ -224,11 +224,11 @@ angular.module('tegApp')
 
 			return that;
 		}
-		function get() {
+		var get = _.memoize(function() {
 			return _.map(mock, function(m) {
 				return make(m);
 			});
-		}
+		});
 
 		// Public API here
 		return {

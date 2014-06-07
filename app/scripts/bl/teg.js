@@ -193,7 +193,7 @@ angular.module('tegApp')
 						case states.secondArmies:
 						case states.addArmies:
 							if (p.hasCountry(countryFrom) && that.pendingArmies > 0) {
-								that.addArmies(1, countryFrom);
+								that.addArmies(countryFrom, 1);
 								that.pendingArmies--;
 							}
 							break;
@@ -208,7 +208,7 @@ angular.module('tegApp')
 						case states.afterCard:
 							if (p.hasCountry(countryFrom)) {
 								if (p.canUseCard(countryFrom)) {
-									that.addArmies(2, countryFrom);
+									that.addArmies(countryFrom, 1);
 									that.useCard(countryFrom);
 								}
 							}
@@ -230,6 +230,7 @@ angular.module('tegApp')
 							that.currentPlayer.removeArmy(attackingCountry);
 						} else {
 							defender.removeArmy(defendingCountry);
+							country.removeArmy();
 						}
 					}
 					if (defender.getArmy(defendingCountry) === 0) {
@@ -259,7 +260,8 @@ angular.module('tegApp')
 				},
 
 				addArmies: function(country, armies) {
-					that.currentPlayer.addArmy(country, armies);
+					that.currentPlayer.addArmies(country, armies);
+					country.addArmies(armies);
 				},
 
 				checkIfWon: function(defender) {

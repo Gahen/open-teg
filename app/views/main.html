@@ -1,42 +1,57 @@
-<h1 class="text-muted col-md-offset-8">TEG</h1>
+<h1 class="text-muted col-md-offset-5">TEG</h1>
+<h3 class="time col-md-offset-2" data-ng-show="TEG.gameStarted">Tiempo {{ TEG.time }}</h3>
+<h3 class="time col-md-2" data-ng-show="TEG.gameStarted" ng-click="TEG.changeTurn()">Terminar turno</h3>
 <div class="players row">
-	<h3 class="col-md-12">Jugadores</h3>
-	<h3 class="col-md-6">Juego</h3>
+	<h3 class="col-md-8">Jugadores</h3>
+	<h3 class="col-md-4">Juego</h3>
+</div>
+<div class="row" data-ng-hide="TEG.gameStarted">
+	<div class="buttons col-md-12">
+		<button class="btn btn-primary" data-ng-click="addPlayer()">Agregar jugador</button>
+		<button class="btn btn-primary" data-ng-click="TEG.start()">¡Jugar!</button>
+	</div>
 </div>
 <div class="row">
-	<span class="col-md-12" data-ng-show="TEG.players.length === 0">Aún no hay jugadores</span>
-	<div class="col-md-12" data-ng-hide="TEG.players.length === 0">
-		<span data-ng-repeat="player in TEG.players" data-ng-class="{'bg-info': (TEG.currentPlayer && player.name === TEG.currentPlayer.name)}" class="{{player.color}} col-md-3">{{player.name}}</span>
-	</div>
-	<div class="buttons col-md-6">
-		<button class="btn btn-primary" data-ng-click="addPlayer()" data-ng-hide="TEG.gameStarted">Agregar jugador</button>
-		<button class="btn btn-primary" data-ng-click="TEG.start()" data-ng-hide="TEG.gameStarted">¡Jugar!</button>
-		<div class="time" data-ng-show="TEG.gameStarted">
-			<h5>Tiempo {{ TEG.time }}</h5>
-		</div>
-	</div>
+	<span class="col-md-6" data-ng-show="TEG.players.length === 0">Aún no hay jugadores</span>
 </div>
-<div id="juego" data-ng-show="TEG.gameStarted">
-	<div class="row">
-		<div class="col-md-12">
-			Mapa
+<div id="juego">
+	<div class="row" data-ng-hide="TEG.players.length === 0">
+		<div class="col-md-8">
+			<span data-ng-repeat="player in TEG.players" data-ng-class="{'bg-info': (TEG.currentPlayer && player.name === TEG.currentPlayer.name)}" class="{{player.color}} col-md-2">{{player.name}}</span>
+			<p>Países:<strong>{{ TEG.currentPlayer.getCountries().length }}</strong></p>
+			<p>Tropas:<strong>{{ TEG.currentPlayer.getArmies() }}</strong></p>
+			<p>Tropas a sumar:<strong>{{ 0 }}</strong></p>
+			<p>Tarjetas:<strong>{{ TEG.currentPlayer.getCards().length }}</strong></p>
+			<p>Canjes realizados:<strong>{{ TEG.currentPlayer.cardUses }}</strong></p>
 		</div>
-		<div class="col-md-6">
-			<h5>Estado</h5>
+		<div class="col-md-2" data-ng-class="TEG.currentCountryFrom.owner.color">
+			<h4>País origen</h4>
+			<p>País:<strong>{{ TEG.currentCountryFrom.id }}</strong></p>
+			<p>Continente:<strong>{{ TEG.currentCountryFrom.continent }}</strong></p>
+			<p>Dueño:<strong>{{ TEG.currentCountryFrom.owner.name }}</strong></p>
+			<p>Tropas:<strong>{{ TEG.currentCountryFrom.armies }}</strong></p>
+		</div>
+		<div class="col-md-2" data-ng-class="TEG.currentCountryTo.owner.color">
+			<h4>País objetivo</h4>
+			<p>País:<strong>{{ TEG.currentCountryTo.id }}</strong></p>
+			<p>Continente:<strong>{{ TEG.currentCountryTo.continent }}</strong></p>
+			<p>Dueño:<strong>{{ TEG.currentCountryTo.owner.name }}</strong></p>
+			<p>Tropas:<strong>{{ TEG.currentCountryTo.armies }}</strong></p>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-8">
+			<h4>Mapa</h4>
+		</div>
+		<div class="col-md-4">
+			<h4>Estado</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8">
 			<mapa data-ng-model="TEG"></mapa>
 		</div>
-		<div class="info col-md-3">
-			<p>Países:</p><span>{{ TEG.currentPlayer.getCountries().length }}</span>
-			<p>Tropas:</p><span>{{ TEG.currentPlayer.getArmies() }}</span>
-			<p>Tropas a sumar:</p><span>{{ 0 }}</span>
-			<p>Tarjetas:</p><span>{{ TEG.currentPlayer.getCards().length }}</span>
-			<p>Canjes realizados:</p><span>{{ TEG.currentPlayer.cardUses }}</span>
-		</div>
-		<div class="dices col-md-3" data-ng-class="{'text-muted': TEG.currentPlayer !== TEG.defender || TEG.currentPlayer !== TEG.attacker}">
+		<div class="dices col-md-4" data-ng-class="{'text-muted': TEG.currentPlayer !== TEG.defender || TEG.currentPlayer !== TEG.attacker}">
 			<h4>Atacando: ({{ TEG.attacker.name }})</h4>
 			<ul data-ng-repeat="dice in TEG.dices[0]">
 				<li>{{ dice }}</li>
@@ -47,7 +62,6 @@
 				<li>{{ dice }}</li>
 			</ul>
 		</div>
-		<div class="dices col-md-4"></div>
 	</div>
 	<div class="row">
 

@@ -134,7 +134,7 @@ angular.module('tegApp')
 					that.setObjectives();
 					that.setCountries();
 					that.currentPlayer = that.players[0];
-					that.pendingPlayers = that.players.slice(0);
+					that.pendingPlayers = that.players.slice(1);
 					that.pendingArmies = 3;
 					that.startTimer();
 				},
@@ -186,7 +186,40 @@ angular.module('tegApp')
 					}
 				},
 
-				countryAction: function(countryFrom, countryTo) {
+				extendCountry: function(country) {
+					var owner = _.find(that.players, function(p) {
+						return p.hasCountry(country);
+					});
+					country.owner = owner;
+
+					return country;
+				},
+
+				countryAction: function(country) {
+					var picked1 = !!that.currentCountryFrom && !that.currentCountryTo;
+					var picked2 = !!(that.currentCountryFrom && that.currentCountryTo);
+					var picked0 = !picked1 && !picked2;
+
+					if (picked0) {
+						that.currentCountryFrom = that.extendCountry(country);
+					}
+					else if (picked1 && that.currentCountryFrom.id === country.id) {
+						that._countryAction();
+					}
+					else if (picked1) {
+						that.currentCountryTo = that.extendCountry(country);
+					}
+					else if (picked2 && that.currentCountryTo.id === country.id) {
+						that._countryAction();
+					} else if (picked2) {
+						delete that.currentCountryFrom;
+						delete that.currentCountryTo;
+					}
+				},
+
+				_countryAction: function() {
+					var countryFrom = that.currentCountryFrom;
+					var countryTo = that.currentCountryTo;
 					var p = that.currentPlayer;
 					switch (that.state) {
 						case states.firstArmies:
@@ -230,7 +263,7 @@ angular.module('tegApp')
 							that.currentPlayer.removeArmy(attackingCountry);
 						} else {
 							defender.removeArmy(defendingCountry);
-							country.removeArmy();
+							// country.removeArmy();
 						}
 					}
 					if (defender.getArmy(defendingCountry) === 0) {
@@ -251,12 +284,15 @@ angular.module('tegApp')
 					that.checkIfWon();
 					that.currentPlayer.endTurn();
 					if (that.pendingPlayers.length === 0) {
-						that.pendingPlayers = that.players.slice(1).push(that.players[that.players.length-1]);
+						that.pendingPlayers = that.players.slice(1);
+						that.pendingPlayers.push(that.players[0]);
+
+						that.players = that.pendingPlayers.slice(0);
 						that.nextState();
 					}
 					that.currentPlayer = that.pendingPlayers.shift();
 					that.currentPlayer.startTurn();
-					that.startTime();
+					that.startTimer();
 				},
 
 				addArmies: function(country, armies) {
@@ -272,7 +308,7 @@ angular.module('tegApp')
 					}
 
 					// Objetivo de destrucción
-					if (objective.type === DESTROY && !defender.getCountries().length) {
+					if (defender && objective.type === DESTROY && !defender.getCountries().length) {
 						if (objective.value === defender.color) {
 							that.gameEnded(); // ganó
 						}

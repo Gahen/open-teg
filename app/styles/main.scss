@@ -1,5 +1,4 @@
 $grid-columns: 18;
-@import "../bower_components/twitter-bootstrap-sass/vendor/assets/stylesheets/bootstrap";
 
 .browsehappy {
     margin: 0.2em 0;
@@ -95,6 +94,12 @@ body {
 [inkscape\:label="paises"] {
 	g {
 		cursor: pointer;
+		&:active {
+			background: grey;
+			path[id*="path"] {
+				fill: grey !important;
+			}
+		}
 		&:hover {
 			background: white;
 			path[id*="path"] {

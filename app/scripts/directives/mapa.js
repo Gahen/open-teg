@@ -18,6 +18,7 @@ angular.module('tegApp')
 						if (country) {
 							teg.countryAction(country);
 						}
+						$scope.$apply();
 					}
 				);
 			},

@@ -3,206 +3,55 @@
 angular.module('tegApp')
 	.factory('Country', function () {
 		var mock = [
-			{
-				'id': 'gran_bretana',
-				'continent': 'europa'
-			},
-			{
-				'id': 'argentina',
-				'continent': 'america del sur'
-			},
-			{
-				'id': 'chile',
-				'continent': 'america del sur'
-			},
-			{
-				'id': 'uruguay',
-				'continent': 'america del sur'
-			},
-			{
-				'id': 'brasil',
-				'continent': 'america del sur'
-			},
-			{
-				'id': 'sahara',
-				'continent': 'africa'
-			},
-			{
-				'id': 'espana',
-				'continent': 'europa'
-			},
-			{
-				'id': 'francia',
-				'continent': 'europa'
-			},
-			{
-				'id': 'italia',
-				'continent': 'europa'
-			},
-			{
-				'id': 'alemania',
-				'continent': 'europa'
-			},
-			{
-				'id': 'egipto',
-				'continent': 'africa'
-			},
-			{
-				'id': 'madagascar',
-				'continent': 'africa'
-			},
-			{
-				'id': 'oregon',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'alaska',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'groenlandia',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'etiopia',
-				'continent': 'africa'
-			},
-			{
-				'id': 'rusia',
-				'continent': 'europa'
-			},
-			{
-				'id': 'nueva_york',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'terranova',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'canada',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'polonia',
-				'continent': 'europa'
-			},
-			{
-				'id': 'california',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'mexico',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'labrador',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'yukon',
-				'continent': 'america del norte'
-			},
-			{
-				'id': 'peru',
-				'continent': 'america del sur'
-			},
-			{
-				'id': 'colombia',
-				'continent': 'america del sur'
-			},
-			{
-				'id': 'islandia',
-				'continent': 'europa'
-			},
-			{
-				'id': 'suecia',
-				'continent': 'europa'
-			},
-			{
-				'id': 'turquia',
-				'continent': 'asia'
-			},
-			{
-				'id': 'israel',
-				'continent': 'asia'
-			},
-			{
-				'id': 'arabia',
-				'continent': 'asia'
-			},
-			{
-				'id': 'zaire',
-				'continent': 'africa'
-			},
-			{
-				'id': 'sudafrica',
-				'continent': 'africa'
-			},
-			{
-				'id': 'australia',
-				'continent': 'oceania'
-			},
-			{
-				'id': 'sumatra',
-				'continent': 'oceania'
-			},
-			{
-				'id': 'borneo',
-				'continent': 'oceania'
-			},
-			{
-				'id': 'java',
-				'continent': 'oceania'
-			},
-			{
-				'id': 'india',
-				'continent': 'asia'
-			},
-			{
-				'id': 'malasia',
-				'continent': 'asia'
-			},
-			{
-				'id': 'iran',
-				'continent': 'asia'
-			},
-			{
-				'id': 'china',
-				'continent': 'asia'
-			},
-			{
-				'id': 'gobi',
-				'continent': 'asia'
-			},
-			{
-				'id': 'mongolia',
-				'continent': 'asia'
-			},
-			{
-				'id': 'siberia',
-				'continent': 'asia'
-			},
-			{
-				'id': 'aral',
-				'continent': 'asia'
-			},
-			{
-				'id': 'tartaria',
-				'continent': 'asia'
-			},
-			{
-				'id': 'tamir',
-				'continent': 'asia'
-			},
-			{
-				'id': 'kamchatka',
-				'continent': 'asia'
-			},
-			{
-				'id': 'japon',
-				'continent': 'asia'
-			}
+			{'id':'gran_bretana','continent':'europa','limits':['alemania','espana','islandia']},
+			{'id':'argentina','continent':'america del sur','limits':['chile','peru','brasil','uruguay']},
+			{'id':'chile','continent':'america del sur','limits':['argentina','peru','australia']} ,
+			{'id':'uruguay','continent':'america del sur','limits':['brasil','argentina']},
+			{'id':'brasil','continent':'america del sur','limits':['uruguay','argentina','peru','colombia','sahara']},
+			{'id':'sahara','continent':'africa','limits':['zaire','etiopia','egipto','espana','brasil']},
+			{'id':'espana','continent':'europa','limits':['francia','sahara','gran_bretana']},
+			{'id':'francia','continent':'europa','limits':['italia','alemania','espana']},
+			{'id':'italia','continent':'europa','limits':['francia','alemania']},
+			{'id':'alemania','continent':'europa','limits':['polonia','gran_bretana','francia','italia']},
+			{'id':'egipto','continent':'africa','limits':['etiopia','madagascar','sahara','israel','turquia','polonia']},
+			{'id':'madagascar','continent':'africa','limits':['egipto','zaire']},
+			{'id':'oregon','continent':'america del norte','limits':['alaska','yukon','canada','nueva_york','california']},
+			{'id':'groenlandia','continent':'america del norte','limits':['labrador','nueva_york','islandia']},
+			{'id':'etiopia','continent':'africa','limits':['sudafrica','zaire','sahara','egipto']},
+			{'id':'rusia','continent':'europa','limits':['polonia','turquia','iran','aral','suecia']},
+			{'id':'nueva_york','continent':'america del norte','limits':['california','oregon','canada','terranova','groenlandia']},
+			{'id':'terranova','continent':'america del norte','limits':['nueva_york','labrador','canada']},
+			{'id':'canada','continent':'america del norte','limits':['yukon','oregon','nueva_york','terranova']},
+			{'id':'polonia','continent':'europa','limits':['alemania','rusia','turquia','egipto']},
+			{'id':'california','continent':'america del norte','limits':['mexico','nueva_york','oregon']},
+			{'id':'mexico','continent':'america del norte','limits':['colombia','california']},
+			{'id':'labrador','continent':'america del norte','limits':['groenlandia','terranova']},
+			{'id':'yukon','continent':'america del norte','limits':['alaska','oregon','canada']},
+			{'id':'peru','continent':'america del sur','limits':['colombia','brasil','argentina','chile']},
+			{'id':'colombia','continent':'america del sur','limits':['peru','brasil','mexico']},
+			{'id':'islandia','continent':'europa','limits':['gran_bretana','suecia','groenlandia']},
+			{'id':'suecia','continent':'europa','limits':['rusia','islandia']},
+			{'id':'turquia','continent':'asia','limits':['israel','arabia','iran','rusia','polonia','egipto']},
+			{'id':'israel','continent':'asia','limits':['turquia','arabia','egipto']},
+			{'id':'arabia','continent':'asia','limits':['israel','turquia']},
+			{'id':'zaire','continent':'africa','limits':['sahara','etiopia','sudafrica','madagascar']},
+			{'id':'sudafrica','continent':'africa','limits':['zaire','etiopia']},
+			{'id':'australia','continent':'oceania','limits':['java','borneo','sumatra','chile']},
+			{'id':'sumatra','continent':'oceania','limits':['india','australia']},
+			{'id':'borneo','continent':'oceania','limits':['australia','malasia']},
+			{'id':'java','continent':'oceania','limits':['australia']},
+			{'id':'india','continent':'asia','limits':['sumatra','china','malasia','iran']},
+			{'id':'malasia','continent':'asia','limits':['china','india']},
+			{'id':'iran','continent':'asia','limits':['rusia','aral','mongolia','gobi','china','india','turquia']},
+			{'id':'china','continent':'asia','limits':['japon','kamchatka','siberia','mongolia','gobi','iran','india','malasia']},
+			{'id':'gobi','continent':'asia','limits':['china','mongolia','iran']},
+			{'id':'mongolia','continent':'asia','limits':['china','siberia','aral','iran','gobi']},
+			{'id':'siberia','continent':'asia','limits':['kamchatka','china','mongolia','aral','tartaria','tamir']},
+			{'id':'aral','continent':'asia','limits':['tartaria','siberia','mongolia','iran','rusia']},
+			{'id':'tartaria','continent':'asia','limits':['tamir','siberia','aral']},
+			{'id':'tamir','continent':'asia','limits':['tartaria','siberia']},
+			{'id':'kamchatka','continent':'asia','limits':['japon','china','siberia']},
+			{'id':'japon','continent':'asia','limits':['kamchatka','china']}
 		];
 
 		function make(country) {
@@ -219,6 +68,9 @@ angular.module('tegApp')
 				},
 				setArmies: function(armies) {
 					that.armies = armies;
+				},
+				limitsWith: function(c) {
+					return _.contains(that.limits, c.id);
 				},
 				getId: _.constant(country.id)
 			};

@@ -20,9 +20,12 @@ angular.module('tegApp')
 		};
 
 
-		teg.addPlayer(teg.colors.black, "jugador 1");
-		teg.addPlayer(teg.colors.red, "jugador 2");
-		teg.addPlayer(teg.colors.green, "jugador 3");
+		teg.addPlayer(teg.colors.yellow, 'jugador 1');
+		teg.addPlayer(teg.colors.pink, 'jugador 2');
+		teg.addPlayer(teg.colors.green, 'jugador 3');
+		teg.addPlayer(teg.colors.black, 'jugador 4');
+		teg.addPlayer(teg.colors.blue, 'jugador 5');
+		teg.addPlayer(teg.colors.red, 'jugador 6');
 	})
 	.controller('AddPlayerDlg', function(TEG, $scope, $modalInstance, colors) {
 		$scope.data = {};

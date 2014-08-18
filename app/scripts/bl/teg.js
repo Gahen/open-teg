@@ -120,6 +120,7 @@ angular.module('tegApp')
 				dices: [], // last pair of dices
 				pendingArmies: 0,
 				cards: Card.all(),
+				states: states,
 				addPlayer: function(color, name) {
 					delete that.colors[color];
 					that.players.push(Player.make(name, color));
@@ -242,12 +243,12 @@ angular.module('tegApp')
 							}
 							break;
 						case states.attack:
-							if (countryTo) {
+							if (countryTo && countryTo.limitsWith(countryFrom)) {
 								that.attack(countryFrom, countryTo);
 							}
 							break;
 						case states.regroup:
-							if (p.hasCountry(countryFrom) && p.hasCountry(countryFrom)) {
+							if (p.hasCountry(countryFrom) && p.hasCountry(countryFrom) && countryTo.limitsWith(countryFrom)) {
 								that.addArmies(countryTo, 1);
 								that.removeArmy(countryFrom);
 							}

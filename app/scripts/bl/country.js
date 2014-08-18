@@ -211,6 +211,9 @@ angular.module('tegApp')
 				addArmies: function(armies) {
 					that.armies += armies;
 				},
+				removeArmies: function(armies) {
+					that.addArmies(-armies);
+				},
 				removeArmy: function() {
 					that.armies--;
 				},

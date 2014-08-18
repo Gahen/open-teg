@@ -38,10 +38,10 @@ angular.module('tegApp')
 				/**
 				 * ¿Add/RemoveArmies acá o en el TEG?
 				 */
-				addArmies: function(country, extraArmies) {
+				addArmies: function(extraArmies) {
 					armies += extraArmies;
 				},
-				removeArmy: function(country) {
+				removeArmy: function() {
 					armies--;
 				},
 				getArmies: function() {

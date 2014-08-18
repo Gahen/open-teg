@@ -22,8 +22,15 @@ angular.module('tegApp')
 			return that;
 		}
 
+		function all() {
+			return _.map(types, function(t) {
+				make(t);
+			});
+		}
+
 		return {
-			make: make
+			make: make,
+			all: all
 		};
 	}
 );

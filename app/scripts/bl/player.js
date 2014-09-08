@@ -14,7 +14,7 @@ angular.module('tegApp')
 				name: name,
 				color: color,
 				playing: false,
-				cardUses: 0,
+				cardTrades: 0,
 				startTurn: function() {
 					that.playing = true;
 				},
@@ -23,6 +23,9 @@ angular.module('tegApp')
 				},
 				getCountries: function() {
 					return angular.copy(countries); // protect it from editing.
+				},
+				getCountry: function(countryId) {
+					return _.where(countries, { id: countryId })[0];
 				},
 				hasCountry: function(country) {
 					return _.contains(countries, country);
@@ -68,9 +71,10 @@ angular.module('tegApp')
 				},
 
 				tradeCards: function(cardsToBeUsed) {
-					if (differentCards(cardsToBeUsed) && _.difference(cards, cardsToBeUsed).length === cards.length - 3) {
+					if (true) { // esto se valida antes
+					// if (differentCards(cardsToBeUsed) && _.difference(cards, cardsToBeUsed).length === cards.length - 3) {
 						cards = _.difference(cards, cardsToBeUsed);
-						that.cardUses++;
+						that.cardTrades++;
 					}
 				},
 				setObjective: function(o) {
@@ -78,7 +82,7 @@ angular.module('tegApp')
 				},
 				getObjective: function() {
 					return objective;
-				}
+				},
 			};
 
 			return that;

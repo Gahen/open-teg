@@ -120,6 +120,7 @@ angular.module('tegApp')
 				dices: [], // last pair of dices
 				pendingArmies: 0,
 				cards: Card.all(),
+				tradedCards: [],
 				states: states,
 				addPlayer: function(color, name) {
 					delete that.colors[color];
@@ -171,7 +172,16 @@ angular.module('tegApp')
 
 				takeCard: function() {
 					if (canTakeCard) {
-						that.currentPlayer.addCard(_.shuffle(that.cards).shift());
+						that.cards = _.shuffle(that.cards);
+						that.currentPlayer.addCard(that.cards.pop());
+					}
+				},
+
+				tradeCard: function(card) {
+					var country = that.currentPlayer.getCountry(card.countryId);
+					if (country && that.currentPlayer.hasCard(card) && !that.isTradedCard(card)) {
+						that.addArmies(country, 2);
+						that.tradedCards.push(card);
 					}
 				},
 
@@ -212,21 +222,18 @@ angular.module('tegApp')
 				countryAction: function(country) {
 					var picked1 = !!that.currentCountryFrom && !that.currentCountryTo;
 					var picked2 = !!(that.currentCountryFrom && that.currentCountryTo);
-					var picked0 = !picked1 && !picked2;
+					// var picked0 = !picked1 && !picked2;
 
-					if (picked0) {
-						that.currentCountryFrom = that.extendCountry(country);
-					}
-					else if (picked1 && that.currentCountryFrom.id === country.id) {
+					if (picked1 && that.currentCountryFrom.id === country.id) {
 						that._countryAction(that.currentCountryFrom);
 					}
-					else if (picked1) {
+					else if (picked1 && country.limitsWith(that.currentCountryFrom)) {
 						that.currentCountryTo = that.extendCountry(country);
 					}
 					else if (picked2 && that.currentCountryTo.id === country.id) {
 						that._countryAction(that.currentCountryFrom, that.currentCountryTo);
-					} else if (picked2) {
-						delete that.currentCountryFrom;
+					} else { // || picked0
+						that.currentCountryFrom = that.extendCountry(country);
 						delete that.currentCountryTo;
 					}
 				},
@@ -292,6 +299,7 @@ angular.module('tegApp')
 							}
 						}
 						if (defendingCountry.armies === 0) {
+							canTakeCard = true;
 							defender.removeCountry(defendingCountry);
 							that.currentPlayer.addCountry(defendingCountry);
 
@@ -307,11 +315,12 @@ angular.module('tegApp')
 				},
 
 				changeTurn: function() {
+					canTakeCard = false;
 					that.checkIfWon();
 					that.currentPlayer.endTurn();
+
 					if (that.pendingPlayers.length === 0) {
-						if (that.state === states.firstArmies ||
-								that.state === states.secondArmies) {
+						if (that.state !== states.attack) {
 							that.pendingPlayers = that.players.slice(0);
 						} else {
 							that.pendingPlayers = that.players.slice(1);
@@ -332,6 +341,9 @@ angular.module('tegApp')
 							break;
 						case states.addArmies:
 							that.pendingArmies = Math.round(that.currentPlayer.getCountries().length/2);
+							break;
+						default:
+							that.pendingArmies = 0;
 							break;
 					}
 
@@ -378,6 +390,28 @@ angular.module('tegApp')
 				},
 				gameEnded: function() {
 					alert('game ended');
+				},
+
+				isTradedCard: function(card) {
+					return _.contains(that.tradedCards, card);
+				},
+
+				trade3Cards: function(cards) {
+					that.currentPlayer.tradeCards(cards);
+					switch (that.currentPlayer.cardTrades) {
+						case 1: 
+							that.pendingArmies += 4;
+							break;
+						case 2:
+							that.pendingArmies += 7;
+							break;
+						case 3:
+							that.pendingArmies += 10;
+							break;
+						default:
+							that.pendingArmies += (that.currentPlayer.cardTrades-1)*5;
+							break;
+					}
 				}
 			};
 

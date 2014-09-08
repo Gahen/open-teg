@@ -101,7 +101,7 @@ body {
 				fill: grey !important;
 			}
 		}
-		&:hover {
+		&.active {
 			background: white;
 			path[id*="path"] {
 				fill: white !important;
@@ -123,7 +123,7 @@ body {
 			fill: rgba(250,80,250,0.5) !important;
 		}
 		&.black path[id*="path"] {
-			fill: rgba(0,0,0,0.5) !important;
+			fill: rgba(50,50,50,0.5) !important;
 		}
 	}
 }

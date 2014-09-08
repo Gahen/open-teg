@@ -1,30 +1,54 @@
-<h1 class="text-muted col-md-offset-5">TEG</h1>
-<h3 class="time col-md-offset-2" data-ng-show="TEG.gameStarted">Tiempo {{ TEG.time }}</h3>
-<button class="time col-md-2" data-ng-show="TEG.gameStarted" data-ng-disabled="TEG.state !== TEG.states.attack && TEG.state !== TEG.states.regroup" ng-click="TEG.change()">Sacar tarjeta</button>
-<button class="time col-md-2" data-ng-show="TEG.gameStarted" data-ng-disabled="TEG.state !== TEG.states.attack" ng-click="TEG.regroup()">Reagrupar</button>
-<button class="time col-md-2" data-ng-show="TEG.gameStarted" ng-click="TEG.changeTurn()">Terminar turno</button>
+<button class="btn time col-md-2" data-ng-show="TEG.gameStarted" data-ng-disabled="TEG.state !== TEG.states.attack && TEG.state !== TEG.states.regroup" ng-click="TEG.takeCard()">Sacar tarjeta</button>
+<button class="btn time col-md-2" data-ng-show="TEG.gameStarted" data-ng-disabled="TEG.state !== TEG.states.addArmies || !canTrade3Cards()" ng-click="trade()">Canjear tarjetas</button>
+<button class="btn time col-md-2" data-ng-show="TEG.gameStarted" data-ng-disabled="TEG.state !== TEG.states.attack" ng-click="TEG.regroup()">Reagrupar</button>
+<button class="btn time col-md-2" data-ng-show="TEG.gameStarted" ng-click="TEG.changeTurn()">Terminar turno</button>
+<h3 class="time col-md-offset-10" data-ng-show="TEG.gameStarted">Tiempo {{ TEG.time/1000 }}</h3>
 <div class="players row">
-	<h3 class="col-md-8">Jugadores</h3>
-	<h3 class="col-md-4">Juego</h3>
-</div>
-<div class="row" data-ng-hide="TEG.gameStarted">
-	<div class="buttons col-md-12">
+	<div class="buttons col-md-8">Jugadores:
+		<span data-ng-show="TEG.players.length === 0">Aún no hay jugadores</span>
+		<span data-ng-repeat="player in TEG.players" data-ng-class="{'bg-info': (TEG.currentPlayer && player.name === TEG.currentPlayer.name)}" class="{{player.color}}">{{player.name}} </span>
+	</div>
+	<div class="buttons col-md-4" data-ng-hide="TEG.gameStarted">
 		<button class="btn btn-primary" data-ng-click="addPlayer()">Agregar jugador</button>
-		<button class="btn btn-primary" data-ng-click="TEG.start()">¡Jugar!</button>
+		<button class="btn btn-primary" data-ng-disabled="TEG.players.length < 2" data-ng-click="TEG.start()">¡Jugar!</button>
 	</div>
 </div>
-<div class="row">
-	<span class="col-md-6" data-ng-show="TEG.players.length === 0">Aún no hay jugadores</span>
-</div>
 <div id="juego">
-	<div class="row" data-ng-hide="TEG.players.length === 0">
-		<div class="col-md-8">
-			<span data-ng-repeat="player in TEG.players" data-ng-class="{'bg-info': (TEG.currentPlayer && player.name === TEG.currentPlayer.name)}" class="{{player.color}} col-md-2">{{player.name}}</span>
+	<div class="row">
+		<div class="col-md-12">
+			<h4>Mapa</h4>
+			<mapa data-ng-model="TEG"></mapa>
+		</div>
+	</div>
+	<div class="row" data-ng-show="TEG.players.length !== 0 && TEG.gameStarted">
+		<div class="col-md-4">
+			<h4>Tarjetas</h4>
+			<ul>
+				<li class="btn btn-default" data-ng-repeat="card in TEG.currentPlayer.getCards()" data-ng-class="{'active':card.active}" data-ng-click="card.active=!card.active">
+				<p>{{card.country.id}}</p>
+				<p>{{card.getType()}}</p>
+				<button data-ng-disabled="TEG.isTradedCard(card)" data-ng-click="TEG.tradeCard(card)">Canjear</button>
+				</li>
+			</ul>
+		</div>
+		<div class="dices col-md-2" data-ng-class="{'text-muted': TEG.currentPlayer !== TEG.defender || TEG.currentPlayer !== TEG.attacker}">
+			<h4>Estado</h4>
+			<h5>Atacando: ({{ TEG.attacker.name }})</h5>
+			<ul data-ng-repeat="dice in TEG.dices[0] track by $index">
+				<li>{{ dice }}</li>
+			</ul>
+
+			<h5>Defendiendo: ({{ TEG.defender.name }})</h5>
+			<ul data-ng-repeat="dice in TEG.dices[1] track by $index">
+				<li>{{ dice }}</li>
+			</ul>
+		</div>
+		<div class="col-md-2">
 			<p>Países:<strong>{{ TEG.currentPlayer.getCountries().length }}</strong></p>
 			<p>Tropas:<strong>{{ TEG.currentPlayer.getArmies() }}</strong></p>
 			<p>Tropas a sumar:<strong>{{ TEG.pendingArmies }}</strong></p>
 			<p>Tarjetas:<strong>{{ TEG.currentPlayer.getCards().length }}</strong></p>
-			<p>Canjes realizados:<strong>{{ TEG.currentPlayer.cardUses }}</strong></p>
+			<p>Canjes realizados:<strong>{{ TEG.currentPlayer.cardTrades }}</strong></p>
 			<p>Acción:<strong>{{ TEG.state }}</strong></p>
 		</div>
 		<div class="col-md-2">
@@ -47,26 +71,5 @@
 		</div>
 		<div class="col-md-2">
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-10">
-			<h4>Mapa</h4>
-			<mapa data-ng-model="TEG"></mapa>
-		</div>
-		<div class="dices col-md-2" data-ng-class="{'text-muted': TEG.currentPlayer !== TEG.defender || TEG.currentPlayer !== TEG.attacker}">
-			<h4>Estado</h4>
-			<h5>Atacando: ({{ TEG.attacker.name }})</h5>
-			<ul data-ng-repeat="dice in TEG.dices[0]">
-				<li>{{ dice }}</li>
-			</ul>
-
-			<h5>Defendiendo: ({{ TEG.defender.name }})</h5>
-			<ul data-ng-repeat="dice in TEG.dices[1]">
-				<li>{{ dice }}</li>
-			</ul>
-		</div>
-	</div>
-	<div class="row">
-
 	</div>
 </div>

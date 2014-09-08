@@ -20,12 +20,33 @@ angular.module('tegApp')
 		};
 
 
-		teg.addPlayer(teg.colors.yellow, 'jugador 1');
-		teg.addPlayer(teg.colors.pink, 'jugador 2');
-		teg.addPlayer(teg.colors.green, 'jugador 3');
-		teg.addPlayer(teg.colors.black, 'jugador 4');
-		teg.addPlayer(teg.colors.blue, 'jugador 5');
-		teg.addPlayer(teg.colors.red, 'jugador 6');
+		$scope.pickCard = function(card) {
+			card.active = !card.active;
+		};
+
+		$scope.trade = function() {
+			var cards = _.filter($scope.TEG.currentPlayer.getCards(), { active: true });
+			$scope.TEG.trade3Cards(cards);
+		};
+
+		$scope.canTrade3Cards = function() {
+			var cards = _.filter($scope.TEG.currentPlayer.getCards(), { active: true });
+			var res = false;
+
+			if (cards.length === 3) {
+				var allDifferent = _.reduce(cards, function(r, c) {
+					return _.without(r, c.type);
+				}, ['a','b','c']).length === 0;
+
+				var allSame = _.all(cards, function(c) {
+					return cards[0].type === c.type;
+				});
+
+				res = allDifferent || allSame;
+			}
+
+			return res;
+		};
 	})
 	.controller('AddPlayerDlg', function(TEG, $scope, $modalInstance, colors) {
 		$scope.data = {};

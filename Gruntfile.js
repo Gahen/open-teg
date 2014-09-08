@@ -18,6 +18,12 @@ module.exports = function (grunt) {
 	// Define the configuration for all the tasks
 	grunt.initConfig({
 
+		shell: {
+			deploy: {
+				command: 'rsync -av dist/ jtumas.com.ar:/var/www/TEG'
+			}
+		},
+
 		// Project settings
 		yeoman: {
 			// configurable paths
@@ -397,6 +403,11 @@ module.exports = function (grunt) {
 		'rev',
 		'usemin',
 		'htmlmin'
+	]);
+
+	grunt.registerTask('deploy', [
+		'build',
+		'shell:deploy'
 	]);
 
 	grunt.registerTask('default', [

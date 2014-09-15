@@ -4,6 +4,7 @@ angular.module('tegApp')
 	.factory('Country', function () {
 		var mock = [
 			{'id':'gran_bretana','continent':'europa','limits':['alemania','espana','islandia']},
+			{'id':'alaska','continent':'america del norte','limits':['yukon','kamchatka','oregon']},
 			{'id':'argentina','continent':'america del sur','limits':['chile','peru','brasil','uruguay']},
 			{'id':'chile','continent':'america del sur','limits':['argentina','peru','australia']} ,
 			{'id':'uruguay','continent':'america del sur','limits':['brasil','argentina']},

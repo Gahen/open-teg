@@ -2,6 +2,59 @@
 
 angular.module('tegApp')
 	.directive('mapa', function ($window) {
+		var dict = {
+			'gran_bretana': 'Gran Bretaña',
+			'alaska': 'Alaska',
+			'argentina': 'Argentina',
+			'chile': 'Chile',
+			'uruguay': 'Uruguay',
+			'brasil': 'Brasil',
+			'sahara': 'Sahara',
+			'espana': 'España',
+			'francia': 'Francia',
+			'italia': 'Italia',
+			'alemania': 'Alemania',
+			'egipto': 'Egipto',
+			'madagascar': 'Madagascar',
+			'oregon': 'Oregon',
+			'groenlandia': 'Groenlandia',
+			'etiopia': 'Etiopia',
+			'rusia': 'Rusia',
+			'nueva_york': 'Nueva York',
+			'terranova': 'Terranova',
+			'canada': 'Canada',
+			'polonia': 'Polonia',
+			'california': 'California',
+			'mexico': 'Mexico',
+			'labrador': 'Labrador',
+			'yukon': 'Yukon',
+			'peru': 'Peru',
+			'colombia': 'Colombia',
+			'islandia': 'Islandia',
+			'suecia': 'Suecia',
+			'turquia': 'Turquia',
+			'israel': 'Israel',
+			'arabia': 'Arabia',
+			'zaire': 'Zaire',
+			'sudafrica': 'Sudafrica',
+			'australia': 'Australia',
+			'sumatra': 'Sumatra',
+			'borneo': 'Borneo',
+			'java': 'Java',
+			'india': 'India',
+			'malasia': 'Malasia',
+			'iran': 'Iran',
+			'china': 'China',
+			'gobi': 'Gobi',
+			'mongolia': 'Mongolia',
+			'siberia': 'Siberia',
+			'aral': 'Aral',
+			'tartaria': 'Tartaria',
+			'tamir': 'Tamir',
+			'kamchatka': 'Kamchatka',
+			'japon': 'Japon'
+		};
+
 		return {
 			templateUrl: 'images/mapa.svg',
 			scope: {
@@ -9,7 +62,6 @@ angular.module('tegApp')
 			},
 			restrict: 'E',
 			link: function postLink($scope, element) {
-				var cc;
 				var teg = $scope.ngModel;
 				var box = angular.element('<div></div>');
 				var last;
@@ -17,14 +69,25 @@ angular.module('tegApp')
 
 				var setOwnerColor = function(c) {
 					var country = $scope.find(c.id);
+					var el = angular.element(c);
 					if (country) {
 						$scope.$watch(function() {
 							return teg.extendCountry(country).owner;
 						}, function(o) {
 							if (o) {
-								angular.element(c).attr('class', o.color);
+								el.attr('class', o.color);
 							}
 						});
+
+						// Texto y cantidad
+						$scope.$watch(function() {
+							return country.armies;
+						}, function(o) {
+							el.find('tspan').text(dict[country.id] + (country.armies ? ' ('+country.armies+')':''));
+						});
+
+						// nombres
+						el.find('tspan').text(dict[country.id]);
 					}
 				};
 
@@ -49,6 +112,7 @@ angular.module('tegApp')
 						angular.element(last).attr('class', 'active');
 						$scope.$apply();
 					});
+
 				angular.forEach(gs, setOwnerColor);
 
 				function resize() {

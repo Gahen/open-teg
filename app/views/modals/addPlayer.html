@@ -3,7 +3,7 @@
 </div>
 <div class="modal-body">
 	<label>Nombre: <input type="text" name="name" data-ng-model="data.name"/></label>
-	<label>Color: <select name="color" data-ng-model="data.color" data-ng-options="color for (color, name) in colors"></select></label>
+	<label>Color: <select name="color" ng-required data-ng-model="data.color" data-ng-options="color for (color, name) in colors"></select></label>
 </div>
 <div class="modal-footer">
 	<button class="btn btn-primary" ng-click="ok()">OK</button>

@@ -2,59 +2,6 @@
 
 angular.module('tegApp')
 	.directive('mapa', function ($window) {
-		var dict = {
-			'gran_bretana': 'Gran Bretaña',
-			'alaska': 'Alaska',
-			'argentina': 'Argentina',
-			'chile': 'Chile',
-			'uruguay': 'Uruguay',
-			'brasil': 'Brasil',
-			'sahara': 'Sahara',
-			'espana': 'España',
-			'francia': 'Francia',
-			'italia': 'Italia',
-			'alemania': 'Alemania',
-			'egipto': 'Egipto',
-			'madagascar': 'Madagascar',
-			'oregon': 'Oregon',
-			'groenlandia': 'Groenlandia',
-			'etiopia': 'Etiopia',
-			'rusia': 'Rusia',
-			'nueva_york': 'Nueva York',
-			'terranova': 'Terranova',
-			'canada': 'Canada',
-			'polonia': 'Polonia',
-			'california': 'California',
-			'mexico': 'Mexico',
-			'labrador': 'Labrador',
-			'yukon': 'Yukon',
-			'peru': 'Peru',
-			'colombia': 'Colombia',
-			'islandia': 'Islandia',
-			'suecia': 'Suecia',
-			'turquia': 'Turquia',
-			'israel': 'Israel',
-			'arabia': 'Arabia',
-			'zaire': 'Zaire',
-			'sudafrica': 'Sudafrica',
-			'australia': 'Australia',
-			'sumatra': 'Sumatra',
-			'borneo': 'Borneo',
-			'java': 'Java',
-			'india': 'India',
-			'malasia': 'Malasia',
-			'iran': 'Iran',
-			'china': 'China',
-			'gobi': 'Gobi',
-			'mongolia': 'Mongolia',
-			'siberia': 'Siberia',
-			'aral': 'Aral',
-			'tartaria': 'Tartaria',
-			'tamir': 'Tamir',
-			'kamchatka': 'Kamchatka',
-			'japon': 'Japon'
-		};
-
 		return {
 			templateUrl: 'images/mapa.svg',
 			scope: {
@@ -82,12 +29,24 @@ angular.module('tegApp')
 						// Texto y cantidad
 						$scope.$watch(function() {
 							return country.armies;
-						}, function(o) {
-							el.find('tspan').text(dict[country.id] + (country.armies ? ' ('+country.armies+')':''));
+						}, function() {
+							el.find('tspan').text(country.getName());
+							if (el.find('tspan').length < 2) {
+								var p = el.find('tspan').eq(0);
+								var clone = p.clone();
+								clone.attr('y', parseFloat(clone.attr('y'))+6);
+								clone.attr('x', parseFloat(clone.attr('x'))+p[0].offsetWidth/2 - 3);
+								clone.text('');
+								el.find('tspan').after(clone);
+							}
+							
+							if  (country.armies) {
+								el.find('tspan').eq(1).text('('+country.armies+')');
+							}
 						});
 
 						// nombres
-						el.find('tspan').text(dict[country.id]);
+						el.find('tspan').text(country.getName());
 					}
 				};
 

@@ -14,56 +14,113 @@
 	</div>
 </div>
 <div id="juego">
+	<div data-ng-show="TEG.players.length !== 0 && TEG.gameStarted" class="interface">
+		<div class="middle">
+			<accordion close-others="oneAtATime" ng-show="TEG.canAttack()">
+				<accordion-group is-open="true" class="width">
+					<accordion-heading>Atacar</accordion-heading>
+					<form ng-submit="TEG.attempAction(attack);">
+						<input type="submit" class="btn centered" value="Atacar">
+						<input type="numeric" class="form-control input-sm" ng-model="attack" maxlength="{{TEG.currentCountryFrom.armies-1}}" ng-required />
+					</form>
+					<h4>De {{TEG.currentCountryFrom.getName()}} a {{TEG.currentCountryTo.getName()}}</h4>
+				</accordion-group>
+			</accordion>
+			<accordion close-others="oneAtATime" ng-show="TEG.canAddArmies()">
+				<accordion-group is-open="true" class="width">
+					<accordion-heading>Sumar tropas</accordion-heading>
+					<form ng-submit="TEG.attempAction(armies);">
+						<input type="submit" class="btn centered" value="Atacar">
+						<input type="numeric" class="form-control input-sm" ng-model="armies" maxlength="{{TEG.pendingArmies" ng-required />
+					</form>
+					<h4>En {{TEG.currentCountryFrom.getName()}}</h4>
+				</accordion-group>
+			</accordion>
+			<accordion close-others="oneAtATime" ng-show="TEG.canRegroup()">
+				<accordion-group is-open="true" class="width">
+					<accordion-heading>Reagrupar</accordion-heading>
+					<form ng-submit="TEG.attempAction(regroup);">
+						<input type="submit" class="btn centered" value="Pasar">
+						<input type="numeric" class="form-control input-sm" ng-model="regroup" maxlength="{{TEG.currentCountryFrom.armies-1}}" ng-required />
+					</form>
+					<h4>De {{TEG.currentCountryFrom.getName()}} a {{TEG.currentCountryTo.getName()}}</h4>
+				</accordion-group>
+			</accordion>
+		</div>
+		<div class="left">
+			<accordion close-others="oneAtATime" data-ng-class="{'text-muted': TEG.currentPlayer !== TEG.defender || TEG.currentPlayer !== TEG.attacker}">
+				<accordion-group is-open="true" class="width">
+					<accordion-heading>
+						Dados<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': true, 'glyphicon-chevron-right': !true}"></i>
+					</accordion-heading>
+					<h5>Atacando: ({{ TEG.attacker.name }})</h5>
+					<ul data-ng-repeat="dice in TEG.dices[0] track by $index">
+						<li>{{ dice }}</li>
+					</ul>
+
+					<h5>Defendiendo: ({{ TEG.defender.name }})</h5>
+					<ul data-ng-repeat="dice in TEG.dices[1] track by $index">
+						<li>{{ dice }}</li>
+					</ul>
+				</accordion-group>
+			</accordion>
+			<accordion close-others="oneAtATime">
+				<accordion-group is-open="true">
+					<accordion-heading>
+						Tarjetas<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': true, 'glyphicon-chevron-right': !true}"></i>
+					</accordion-heading>
+					<ul>
+						<li class="btn btn-default" data-ng-repeat="card in TEG.currentPlayer.getCards()" data-ng-class="{'active':card.active}" data-ng-click="card.active=!card.active">
+						<p>{{card.country.getName()}}</p>
+						<p>{{card.getType()}}</p>
+						<button data-ng-disabled="TEG.isTradedCard(card)" data-ng-click="TEG.tradeCard(card)">Canjear</button>
+						</li>
+					</ul>
+				</accordion-group>
+			</accordion>
+			<accordion close-others="oneAtATime">
+				<accordion-group is-open="true" class="width">
+					<accordion-heading>
+						Estado<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': true, 'glyphicon-chevron-right': !true}"></i>
+					</accordion-heading>
+					<p>Países:<strong>{{ TEG.currentPlayer.getCountries().length }}</strong></p>
+					<p>Tropas:<strong>{{ TEG.currentPlayer.getArmies() }}</strong></p>
+					<p>Tropas a sumar:<strong>{{ TEG.pendingArmies }}</strong></p>
+					<p>Tarjetas:<strong>{{ TEG.currentPlayer.getCards().length }}</strong></p>
+					<p>Canjes realizados:<strong>{{ TEG.currentPlayer.cardTrades }}</strong></p>
+					<p>Acción:<strong>{{ TEG.state }}</strong></p>
+				</accordion-group>
+			</accordion>
+		</div>
+		<div class="right">
+			<accordion close-others="oneAtATime">
+				<accordion-group is-open="true" class="width">
+					<accordion-heading>
+						País origen<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': true, 'glyphicon-chevron-right': !true}"></i>
+					</accordion-heading>
+					<p>País:<strong>{{ TEG.currentCountryFrom.getName() }}</strong></p>
+					<p>Continente:<strong>{{ TEG.currentCountryFrom.continent }}</strong></p>
+					<p>Dueño:<strong>{{ TEG.currentCountryFrom.owner.name }}</strong></p>
+					<p>Tropas:<strong>{{ TEG.currentCountryFrom.armies }}</strong></p>
+				</accordion-group>
+			</accordion>
+			<accordion close-others="oneAtATime">
+				<accordion-group is-open="true" class="width">
+					<accordion-heading>
+						País objetivo<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': true, 'glyphicon-chevron-right': !true}"></i>
+					</accordion-heading>
+					<p>País:<strong>{{ TEG.currentCountryTo.getName() }}</strong></p>
+					<p>Continente:<strong>{{ TEG.currentCountryTo.continent }}</strong></p>
+					<p>Dueño:<strong>{{ TEG.currentCountryTo.owner.name }}</strong></p>
+					<p>Tropas:<strong>{{ TEG.currentCountryTo.armies }}</strong></p>
+				</accordion-group>
+			</accordion>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-12">
 			<h4>Mapa</h4>
 			<mapa data-ng-model="TEG"></mapa>
-		</div>
-	</div>
-	<div class="row" data-ng-show="TEG.players.length !== 0 && TEG.gameStarted">
-		<div class="col-md-4">
-			<h4>Tarjetas</h4>
-			<ul>
-				<li class="btn btn-default" data-ng-repeat="card in TEG.currentPlayer.getCards()" data-ng-class="{'active':card.active}" data-ng-click="card.active=!card.active">
-				<p>{{card.country.id}}</p>
-				<p>{{card.getType()}}</p>
-				<button data-ng-disabled="TEG.isTradedCard(card)" data-ng-click="TEG.tradeCard(card)">Canjear</button>
-				</li>
-			</ul>
-		</div>
-		<div class="dices col-md-2" data-ng-class="{'text-muted': TEG.currentPlayer !== TEG.defender || TEG.currentPlayer !== TEG.attacker}">
-			<h4>Estado</h4>
-			<h5>Atacando: ({{ TEG.attacker.name }})</h5>
-			<ul data-ng-repeat="dice in TEG.dices[0] track by $index">
-				<li>{{ dice }}</li>
-			</ul>
-
-			<h5>Defendiendo: ({{ TEG.defender.name }})</h5>
-			<ul data-ng-repeat="dice in TEG.dices[1] track by $index">
-				<li>{{ dice }}</li>
-			</ul>
-		</div>
-		<div class="col-md-2">
-			<p>Países:<strong>{{ TEG.currentPlayer.getCountries().length }}</strong></p>
-			<p>Tropas:<strong>{{ TEG.currentPlayer.getArmies() }}</strong></p>
-			<p>Tropas a sumar:<strong>{{ TEG.pendingArmies }}</strong></p>
-			<p>Tarjetas:<strong>{{ TEG.currentPlayer.getCards().length }}</strong></p>
-			<p>Canjes realizados:<strong>{{ TEG.currentPlayer.cardTrades }}</strong></p>
-			<p>Acción:<strong>{{ TEG.state }}</strong></p>
-		</div>
-		<div class="col-md-2">
-			<h4>País origen</h4>
-			<p>País:<strong>{{ TEG.currentCountryFrom.id }}</strong></p>
-			<p>Continente:<strong>{{ TEG.currentCountryFrom.continent }}</strong></p>
-			<p>Dueño:<strong>{{ TEG.currentCountryFrom.owner.name }}</strong></p>
-			<p>Tropas:<strong>{{ TEG.currentCountryFrom.armies }}</strong></p>
-		</div>
-		<div class="col-md-2">
-			<h4>País objetivo</h4>
-			<p>País:<strong>{{ TEG.currentCountryTo.id }}</strong></p>
-			<p>Continente:<strong>{{ TEG.currentCountryTo.continent }}</strong></p>
-			<p>Dueño:<strong>{{ TEG.currentCountryTo.owner.name }}</strong></p>
-			<p>Tropas:<strong>{{ TEG.currentCountryTo.armies }}</strong></p>
 		</div>
 	</div>
 	<div class="row">

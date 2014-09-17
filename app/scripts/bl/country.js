@@ -2,6 +2,59 @@
 
 angular.module('tegApp')
 	.factory('Country', function () {
+		var dict = {
+			'gran_bretana': 'Gran Bretaña',
+			'alaska': 'Alaska',
+			'argentina': 'Argentina',
+			'chile': 'Chile',
+			'uruguay': 'Uruguay',
+			'brasil': 'Brasil',
+			'sahara': 'Sahara',
+			'espana': 'España',
+			'francia': 'Francia',
+			'italia': 'Italia',
+			'alemania': 'Alemania',
+			'egipto': 'Egipto',
+			'madagascar': 'Madagascar',
+			'oregon': 'Oregon',
+			'groenlandia': 'Groenlandia',
+			'etiopia': 'Etiopia',
+			'rusia': 'Rusia',
+			'nueva_york': 'Nueva York',
+			'terranova': 'Terranova',
+			'canada': 'Canada',
+			'polonia': 'Polonia',
+			'california': 'California',
+			'mexico': 'Mexico',
+			'labrador': 'Labrador',
+			'yukon': 'Yukon',
+			'peru': 'Peru',
+			'colombia': 'Colombia',
+			'islandia': 'Islandia',
+			'suecia': 'Suecia',
+			'turquia': 'Turquia',
+			'israel': 'Israel',
+			'arabia': 'Arabia',
+			'zaire': 'Zaire',
+			'sudafrica': 'Sudafrica',
+			'australia': 'Australia',
+			'sumatra': 'Sumatra',
+			'borneo': 'Borneo',
+			'java': 'Java',
+			'india': 'India',
+			'malasia': 'Malasia',
+			'iran': 'Iran',
+			'china': 'China',
+			'gobi': 'Gobi',
+			'mongolia': 'Mongolia',
+			'siberia': 'Siberia',
+			'aral': 'Aral',
+			'tartaria': 'Tartaria',
+			'tamir': 'Tamir',
+			'kamchatka': 'Kamchatka',
+			'japon': 'Japon'
+		};
+
 		var mock = [
 			{'id':'gran_bretana','continent':'europa','limits':['alemania','espana','islandia']},
 			{'id':'alaska','continent':'america del norte','limits':['yukon','kamchatka','oregon']},
@@ -73,13 +126,17 @@ angular.module('tegApp')
 				limitsWith: function(c) {
 					return _.contains(that.limits, c.id);
 				},
-				getId: _.constant(country.id)
+				getId: _.constant(country.id),
+				getName: function() {
+					return dict[that.id];
+				}
 			};
 
 			angular.extend(that, country);
 
 			return that;
 		}
+
 		var get = _.memoize(function() {
 			return _.map(mock, function(m) {
 				return make(m);

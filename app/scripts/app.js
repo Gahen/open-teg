@@ -5,15 +5,15 @@ angular.module('tegApp', [
 	'ngResource',
 	'ngSanitize',
 	'ngRoute',
-	'ui.bootstrap'
+    'ui.bootstrap'
 ])
-	.config(function ($routeProvider) {
-		$routeProvider
-			.when('/', {
-				templateUrl: 'views/main.html',
-				controller: 'MainCtrl'
-			})
-			.otherwise({
-				redirectTo: '/'
-			});
-	});
+.config(function ($routeProvider) {
+	$routeProvider
+		.when('/', {
+			templateUrl: 'views/main.html',
+			controller: 'MainCtrl'
+		})
+		.otherwise({
+			redirectTo: '/'
+		});
+});

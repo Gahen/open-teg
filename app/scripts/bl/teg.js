@@ -272,8 +272,8 @@ angular.module('tegApp')
 						case states.attack:
 							if (countryTo && countryTo.limitsWith(countryFrom) && !p.hasCountry(countryTo)) {
 								that.attack(countryFrom, countryTo, q);
-								break; // if you cant attack maybe you are trying to regroup
 							}
+							break; // if you cant attack maybe you are trying to regroup
 						case states.regroup:
 							if (that.canRegroup()) {
 								while (q-- && countryFrom.armies > 1) {

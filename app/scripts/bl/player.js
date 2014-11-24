@@ -6,10 +6,6 @@ angular.module('tegApp')
 		function make(name, color) {
 			var countries = [], cards = [], armies = 0, objective;
 
-			function differentCards(cards) {
-				return _.uniq(cards, 'type').length === cards.length;
-			}
-
 			var that = {
 				name: name,
 				color: color,
@@ -71,11 +67,8 @@ angular.module('tegApp')
 				},
 
 				tradeCards: function(cardsToBeUsed) {
-					if (true) { // esto se valida antes
-					// if (differentCards(cardsToBeUsed) && _.difference(cards, cardsToBeUsed).length === cards.length - 3) {
-						cards = _.difference(cards, cardsToBeUsed);
-						that.cardTrades++;
-					}
+					cards = _.difference(cards, cardsToBeUsed);
+					that.cardTrades++;
 				},
 				setObjective: function(o) {
 					objective = o;

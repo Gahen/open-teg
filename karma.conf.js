@@ -21,9 +21,9 @@ module.exports = function(config) {
 			'app/bower_components/angular-route/angular-route.js',
 			'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
 			'app/scripts/*.js',
-			'app/scripts/**/*.js',
+			'app/scripts/*/*.js',
 			// 'test/mock/**/*.js',
-			// 'test/spec/**/*.js'
+			'test/spec/**/*.js'
 		],
 
 		// list of files / patterns to exclude
@@ -53,7 +53,7 @@ module.exports = function(config) {
 
 		preprocessors: {
 			'app/scripts/*.js': ['coverage'],
-			'app/scripts/**/*.js': ['coverage']
+			'app/scripts/*/*.js': ['coverage']
 		},
 
 		reporters: ['progress', 'coverage'],

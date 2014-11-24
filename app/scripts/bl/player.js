@@ -3,6 +3,21 @@
 angular.module('tegApp')
 	.factory('Player', function () {
 
+		function validTradeCards(cards, ownCards) {
+			var types = 'abc';
+			var cardTypes = _.pluck(cards, 'type');
+			var are3 = cards.length === 3;
+			var allDifferent = are3 && _.every(types, function(t) {
+				return cardTypes.indexOf(t) !== -1;
+			});
+			var allOwn = are3 && _.every(cards, function(c) {
+				return ownCards.indexOf(c) !== -1;
+			});
+
+			console.log(_.pluck(cards,'type'), _.pluck(ownCards, 'type'), allDifferent, allOwn);
+			return allDifferent && allOwn;
+		}
+
 		function make(name, color) {
 			var countries = [], cards = [], armies = 0, objective;
 
@@ -67,8 +82,12 @@ angular.module('tegApp')
 				},
 
 				tradeCards: function(cardsToBeUsed) {
-					cards = _.difference(cards, cardsToBeUsed);
-					that.cardTrades++;
+					if (!validTradeCards(cardsToBeUsed, cards)) {
+						throw new Error('invalid cards to trade');
+					} else {
+						cards = _.difference(cards, cardsToBeUsed);
+						that.cardTrades++;
+					}
 				},
 				setObjective: function(o) {
 					objective = o;

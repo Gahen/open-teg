@@ -20,7 +20,7 @@ describe('Card', function () {
 
 	it('should build countries from data', function() {
 		var card = Card.make({id: 'argentina'});
-		expect(card.getType()).toBe('b');
+		expect(card.type).toBe('b');
 		expect(card.getCountry().__class).toEqual('Country');
 	});
 
@@ -37,7 +37,7 @@ describe('Card', function () {
 		});
 
 		it('should have correct type', function() {
-			expect(card.getType()).toBe('b');
+			expect(card.type).toBe('b');
 		});
 	});
 

@@ -13,7 +13,7 @@ describe('Player', function () {
 		card3 = _Card_.make({id: 'italia'}); // This should be more mockable.
 		card4 = _Card_.make({id: 'gran_bretana'}); // This should be more mockable.
 		country = _Country_.make({id: 'someCountry'});
-		player = _Player_.make('fafrula');
+		player = _Player_.make('fafrula', 'red');
 		spyOn(country, 'setArmies');
 	}));
 
@@ -35,16 +35,14 @@ describe('Player', function () {
 
 	it('should add armies', function () {
 		var add = 10;
-		player.addCountry(country);
-		player.addArmies(country, add);
-		expect(player.getArmies()).toBe(add+1);
+		player.addArmies(add);
+		expect(player.getArmies()).toBe(add);
 	});
 
 	it('should remove an army', function () {
-		player.addCountry(country);
-		player.addArmies(country, 5);
-		player.removeArmy(country);
-		expect(player.getArmies()).toBe(5);
+		player.addArmies(5);
+		player.removeArmy();
+		expect(player.getArmies()).toBe(4);
 	});
 
 	it('should add a card', function () {
@@ -54,7 +52,7 @@ describe('Player', function () {
 
 	it('should not use cards if they are too few', function () {
 		player.addCard(card);
-		player.useCards([card]);
+		expect(player.tradeCards.bind(null, [card])).toThrow();
 		expect(player.getCards()).toEqual([card]);
 	});
 
@@ -63,8 +61,7 @@ describe('Player', function () {
 		player.addCard(card);
 		player.addCard(card2);
 		player.addCard(card4);
-		player.useCards(cards);
-		expect(player.getCards()).toEqual(cards);
+		expect(player.tradeCards.bind(null, cards)).toThrow();
 	});
 
 	it('should use cards', function () {
@@ -72,7 +69,7 @@ describe('Player', function () {
 		player.addCard(card);
 		player.addCard(card2);
 		player.addCard(card3);
-		player.useCards(cards);
+		expect(player.tradeCards.bind(null, cards)).not.toThrow();
 		expect(player.getCards()).toEqual([]);
 	});
 

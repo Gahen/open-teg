@@ -21,8 +21,7 @@ angular.module('tegApp')
 				country: c,
 				type: type, // optimization for searchs
 				getCountry: _.constant(c),
-				getType: _.constant(typeName[type]),
-				used: false
+				getType: _.constant(typeName[type])
 			};
 
 			return that;

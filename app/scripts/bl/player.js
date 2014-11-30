@@ -14,29 +14,25 @@ angular.module('tegApp')
 				return ownCards.indexOf(c) !== -1;
 			});
 
-			console.log(_.pluck(cards,'type'), _.pluck(ownCards, 'type'), allDifferent, allOwn);
 			return allDifferent && allOwn;
 		}
 
 		function make(name, color) {
-			var countries = [], cards = [], armies = 0, objective;
+			var countries = [], cards = [], armies = 0, objective, usedCards = [];
 
 			var that = {
 				name: name,
 				color: color,
-				playing: false,
 				cardTrades: 0,
-				startTurn: function() {
-					that.playing = true;
-				},
-				endTurn: function() {
-					that.playing = false;
-				},
 				getCountries: function() {
 					return angular.copy(countries); // protect it from editing.
 				},
 				getCountry: function(countryId) {
-					return _.where(countries, { id: countryId })[0];
+					var country = _.where(countries, { id: countryId })[0];
+					if (!country) {
+						throw new Error('"'+countryId+'" is not '+that.color+'\'s country');
+					}
+					return country;
 				},
 				hasCountry: function(country) {
 					return _.contains(countries, country);
@@ -72,12 +68,17 @@ angular.module('tegApp')
 				},
 				canUseCard: function(countryOrCard) {
 					var card = that.hasCard(countryOrCard) ? countryOrCard : _.find(cards, { country: countryOrCard });
-					return card && !card.used;
+					return !!(card && !_.find(usedCards, { 'id': card.id }));
 				},
 				useCard: function(countryOrCard) {
 					var card = that.hasCard(countryOrCard) ? countryOrCard : _.find(cards, { country: countryOrCard });
-					if (card && that.canUseCard(card)) {
-						card.used = true;
+
+					if (!card) {
+						throw new Error('Invalid card');
+					} else if (!that.canUseCard(card)) {
+						throw new Error('Can\'t use a card twice');
+					} else {
+						usedCards.push(card);
 					}
 				},
 

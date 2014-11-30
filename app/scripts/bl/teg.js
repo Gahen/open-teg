@@ -7,7 +7,11 @@
 
 angular.module('tegApp')
 	.factory('TEG', function (Dice, Player, Country, Card, $interval) {
-		var DESTROY = 'destroy';
+		var OBJECTIVES_TYPES = {
+			DESTROY: 'destroy',
+			CONQUER: 'conquer'
+		};
+
 		var colors = {
 			green: 'green',
 			blue: 'blue',
@@ -30,14 +34,14 @@ angular.module('tegApp')
 		};
 
 		var objectives = [
-			{ type: DESTROY, value: colors.green },
-			{ type: DESTROY, value: colors.blue },
-			{ type: DESTROY, value: colors.black },
-			{ type: DESTROY, value: colors.pink },
-			{ type: DESTROY, value: colors.yellow },
-			{ type: DESTROY, value: colors.red },
+			{ type: OBJECTIVES_TYPES.DESTROY, value: colors.green },
+			{ type: OBJECTIVES_TYPES.DESTROY, value: colors.blue },
+			{ type: OBJECTIVES_TYPES.DESTROY, value: colors.black },
+			{ type: OBJECTIVES_TYPES.DESTROY, value: colors.pink },
+			{ type: OBJECTIVES_TYPES.DESTROY, value: colors.yellow },
+			{ type: OBJECTIVES_TYPES.DESTROY, value: colors.red },
 			{
-				type: 'conquer',
+				type: OBJECTIVES_TYPES.CONQUER,
 				value: {
 					'africa': 6,
 					'america del norte': 5,
@@ -45,7 +49,7 @@ angular.module('tegApp')
 				},
 			},
 			{
-				type: 'conquer',
+				type: OBJECTIVES_TYPES.CONQUER,
 				value: {
 					'america del sur': 6,
 					'limitrofes': 3,
@@ -53,7 +57,7 @@ angular.module('tegApp')
 				}
 			},
 			{
-				type: 'conquer',
+				type: OBJECTIVES_TYPES.CONQUER,
 				value: {
 					'europa': 9,
 					'asia': 4,
@@ -61,7 +65,7 @@ angular.module('tegApp')
 				}
 			},
 			{
-				type: 'conquer',
+				type: OBJECTIVES_TYPES.CONQUER,
 				value: {
 					'asia': 15,
 					'america del norte': 5,
@@ -69,7 +73,7 @@ angular.module('tegApp')
 				}
 			},
 			{
-				type: 'conquer',
+				type: OBJECTIVES_TYPES.CONQUER,
 				value: {
 					'oceania': 2,
 					'america del norte': 10,
@@ -77,7 +81,7 @@ angular.module('tegApp')
 				}
 			},
 			{
-				type: 'conquer',
+				type: OBJECTIVES_TYPES.CONQUER,
 				value: {
 					'oceania': 2,
 					'america del norte': 4,
@@ -88,7 +92,7 @@ angular.module('tegApp')
 				}
 			},
 			{
-				type: 'conquer',
+				type: OBJECTIVES_TYPES.CONQUER,
 				value: {
 					'europa': 2,
 					'america del norte': 10,
@@ -96,7 +100,7 @@ angular.module('tegApp')
 				}
 			},
 			{
-				type: 'conquer',
+				type: OBJECTIVES_TYPES.CONQUER,
 				value: {
 					'africa': 6,
 					'america del sur': 6,
@@ -353,7 +357,6 @@ angular.module('tegApp')
 				changeTurn: function() {
 					canTakeCard = false;
 					that.checkIfWon();
-					that.currentPlayer.endTurn();
 
 					if (that.pendingPlayers.length === 0) {
 						if (that.state !== states.attack) {
@@ -383,7 +386,6 @@ angular.module('tegApp')
 							break;
 					}
 
-					that.currentPlayer.startTurn();
 					that.startTimer();
 				},
 
@@ -405,12 +407,12 @@ angular.module('tegApp')
 					}
 
 					// Objetivo de destrucción
-					if (defender && objective.type === DESTROY && !defender.getCountries().length) {
+					if (defender && objective.type === OBJECTIVES_TYPES.DESTROY && !defender.getCountries().length) {
 						if (objective.value === defender.color) {
 							that.gameEnded(); // ganó
 						}
 					// objetivo de conquista
-					} else if (objective.type === 'conquer') {
+					} else if (objective.type === OBJECTIVES_TYPES.CONQUER) {
 						var obj = angular.copy(objective.value);
 						_.each(that.currentPlayer.getCountries(), function(c) {
 							if (obj[c.continent]) {

@@ -18,6 +18,10 @@ angular.module('tegApp')
 		}
 
 		function make(name, color) {
+			if (!name || !color) {
+				throw new Error('Player.make: invalid arguments');
+			}
+
 			var countries = [], cards = [], armies = 0, objective, usedCards = [];
 
 			var that = {

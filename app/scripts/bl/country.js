@@ -110,15 +110,13 @@ angular.module('tegApp')
 
 		function make(country) {
 			var that = {
+				armies: 0,
 				__class: 'Country',
 				addArmies: function(armies) {
 					that.armies += armies;
 				},
 				removeArmies: function(armies) {
 					that.addArmies(-armies);
-				},
-				removeArmy: function() {
-					that.armies--;
 				},
 				setArmies: function(armies) {
 					that.armies = armies;

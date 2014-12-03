@@ -7,6 +7,7 @@
 
 angular.module('tegApp')
 	.factory('TEG', function (Dice, Player, Country, Card, $interval) {
+
 		var OBJECTIVES_TYPES = {
 			DESTROY: 'destroy',
 			CONQUER: 'conquer'
@@ -391,7 +392,7 @@ angular.module('tegApp')
 
 				removeArmy: function(country) {
 					that.currentPlayer.removeArmy();
-					country.removeArmy();
+					country.removeArmies(1);
 				},
 
 				addArmies: function(country, armies) {

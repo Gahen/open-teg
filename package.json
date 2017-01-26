@@ -5,7 +5,7 @@
   "repository": "git@github.com:Gahen/open-teg.git",
   "devDependencies": {
     "express": "^4.8.4",
-    "grunt": "~0.4.1",
+    "grunt": "^0.4.5",
     "grunt-autoprefixer": "^0.4.2",
     "grunt-bower-install": "^0.7.0",
     "grunt-concurrent": "^0.4.3",
@@ -19,6 +19,7 @@
     "grunt-contrib-htmlmin": "^0.1.3",
     "grunt-contrib-imagemin": "^0.3.0",
     "grunt-contrib-jshint": "^0.7.2",
+    "grunt-contrib-less": "^1.1.0",
     "grunt-contrib-uglify": "^0.2.7",
     "grunt-contrib-watch": "^0.5.3",
     "grunt-google-cdn": "^0.2.2",

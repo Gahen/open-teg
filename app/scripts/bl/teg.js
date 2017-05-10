@@ -8,6 +8,8 @@
 angular.module('tegApp')
 	.factory('TEG', function (Dice, Player, Country, Card, $interval) {
 
+		var saveInterval = 5000;
+
 		var OBJECTIVES_TYPES = {
 			DESTROY: 'destroy',
 			CONQUER: 'conquer'
@@ -114,6 +116,7 @@ angular.module('tegApp')
 
 		var f = function() {
 			var canTakeCard = false;
+
 			var that = {
 				players: [],
 				colors: angular.copy(colors),
@@ -396,7 +399,6 @@ angular.module('tegApp')
 				},
 
 				addArmies: function(country, armies) {
-					that.currentPlayer.addArmies(armies);
 					country.addArmies(armies);
 				},
 
@@ -451,8 +453,31 @@ angular.module('tegApp')
 							that.pendingArmies += (that.currentPlayer.cardTrades-1)*5;
 							break;
 					}
+				},
+				serialize: function() {
+					return JSON.stringify(that);
+				},
+				parse: function(state) {
+					angular.extend(that, JSON.parse(state));
+
+					// initialize all instances
+					that.cards = _.map(that.cards, function(c) {
+						return Card.parse(c);
+					});
+
+					that.players = _.map(that.players, function(p) {
+						return Player.parse(p);
+					});
 				}
 			};
+
+			if (localStorage.getItem('TEGdata')) {
+				that.parse(localStorage.getItem('TEGdata'));
+			}
+
+			$interval(function() {
+				localStorage.setItem('TEGdata', that.serialize());
+			}, saveInterval);
 
 			return that;
 		};
@@ -460,8 +485,8 @@ angular.module('tegApp')
 		// Public API here
 		return {
 			'new': f,
-			states: states,
-			objectives: objectives,
-			colors: colors
+			'states': states,
+			'objectives': objectives,
+			'colors': colors,
 		};
 	});

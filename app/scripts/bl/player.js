@@ -17,6 +17,11 @@ angular.module('tegApp')
 			return allDifferent && allOwn;
 		}
 
+		function parse(o) {
+			var player = make(o.name, o.color);
+			angular.extend(player, o);
+		}
+
 		function make(name, color) {
 			if (!name || !color) {
 				throw new Error('Player.make: invalid arguments');
@@ -107,6 +112,7 @@ angular.module('tegApp')
 
 		// Public API here
 		return {
-			make: make
+			make: make,
+			parse: parse
 		};
 	});
